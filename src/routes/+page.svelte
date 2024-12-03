@@ -1,2 +1,15 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+    import Map from '$lib/components/Map.svelte';
+</script>
+  
+<div class="layout">
+    <Map />
+</div>
+  
+<style>
+    .layout {
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+    }
+</style>
