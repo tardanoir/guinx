@@ -2,6 +2,8 @@
     import { onMount } from 'svelte';
     import { browser } from '$app/environment';
     import Button from "$lib/components/ui/button/button.svelte";
+    import ExportDialog from '$lib/components/ExportDialog.svelte';
+    import { exportDialogOpen, exportData } from '$lib/stores/export-dialog';
     
     let mapElement: HTMLElement;
     let map: any;
@@ -46,19 +48,13 @@
         }
     });
 
-    function exportGeoJSON() {
+    function handleExport() {
         if (drawnItems) {
-            const data = drawnItems.toGeoJSON();
-            const dataStr = JSON.stringify(data);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = 'map-data.geojson';
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
+            $exportData = drawnItems.toGeoJSON();
+            $exportDialogOpen = true;
         }
     }
+
 </script>
 
 <div class="map-container">
@@ -67,18 +63,20 @@
         <Button 
             variant="outline"
             class="bg-background hover:bg-accent text-foreground shadow-sm"
-            on:click={exportGeoJSON}
+            on:click={handleExport}
         >
-            Export GeoJSON
+            Export
         </Button>
     </div>
 </div>
+<ExportDialog />
 
 <style>
     .map-container {
         position: relative;
         height: 100%;
         width: 100%;
+        z-index: 1;
     }
   
     #map {
