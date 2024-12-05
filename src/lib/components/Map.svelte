@@ -1,20 +1,22 @@
 <script lang="ts">
     import { onMount, onDestroy } from 'svelte';
     import { browser } from '$app/environment';
-    import Button from "$lib/components/ui/button/button.svelte";
     import ExportDialog from '$lib/components/ExportDialog.svelte';
     import { exportDialogOpen, exportData } from '$lib/stores/export-dialog';
     import { importDialogOpen } from '$lib/stores/import-dialog';
     import ImportDialog from '$lib/components/ImportDialog.svelte';
     import mapboxgl from 'mapbox-gl';
     import MapboxDraw from '@mapbox/mapbox-gl-draw';
+    import MapControls from './MapControls.svelte';
 
     // You'll need to get a Mapbox access token
-    mapboxgl.accessToken = '';
-
+    mapboxgl.accessToken = 'pk.eyJ1IjoidGFyZGFub2lyIiwiYSI6ImNtNGJmdXFxeTAzNzMycW5kZHpyNWo3Y2kifQ.tBnUr1i-Pgcmbki6mCgRzA';
     let mapElement: HTMLElement;
     let map: mapboxgl.Map;
     let draw: any;
+    let status = 'saved';
+    let mode = 'Normal';
+    let currentBranch = 'main';
 
     onMount(async () => {
         if (browser) {
@@ -89,7 +91,7 @@
     }
 
     function drawTrash() {
-        draw.trash();
+        draw.deleteAll();
     }
 
     onDestroy(() => {
@@ -104,70 +106,24 @@
 
 <div class="map-container">
     <div bind:this={mapElement} id="map"></div>
-    <div class="import-export-buttons">
-        <Button 
-            variant="outline"
-            class="bg-background hover:bg-accent text-foreground shadow-sm mr-2"
-            on:click={handleImport}
-        >
-            <img src="/icons/zoomIn.svg" alt="Draw Point" />
-        </Button>
-        <Button 
-            variant="outline"
-            class="bg-background hover:bg-accent text-foreground shadow-sm"
-            on:click={handleExport}
-        >
-            <img src="/icons/zoomIn.svg" alt="Draw Point" />
-        </Button>
-    </div>
-    <div class="zoom-controls">
-        <Button 
-            variant="outline"
-            class="bg-background hover:bg-accent text-foreground shadow-sm"
-            on:click={zoomIn}
-        >
-            <img src="/icons/zoomIn.svg" alt="Draw Point" />
-        </Button>
-        <Button 
-            variant="outline"
-            class="bg-background hover:bg-accent text-foreground shadow-sm"
-            on:click={zoomOut}
-        >
-            <img src="/icons/zoomOut.svg" alt="Draw Point" />
-        </Button>
-    </div>
-    <div class="drawing-controls">
-        <Button 
-            variant="outline"
-            class="bg-background hover:bg-accent text-foreground shadow-sm"
-            on:click={drawLineString}
-        >
-            <img src="/icons/linestring.svg" alt="Draw Line String" />
-        </Button>
-        <Button 
-            variant="outline"
-            class="bg-background hover:bg-accent text-foreground shadow-sm"
-            on:click={drawPolygon}
-        >
-            <img src="/icons/polygon.svg" alt="Draw Polygon" />
-        </Button>
-        <Button 
-            variant="outline"
-            class="bg-background hover:bg-accent text-foreground shadow-sm"
-            on:click={drawPoint}
-        >
-            <img src="/icons/point.svg" alt="Draw Point" />
-        </Button>
-        <Button 
-            variant="outline"
-            class="bg-background hover:bg-accent text-foreground shadow-sm"
-            on:click={drawTrash}
-        >
-            <img src="/icons/trash.svg" alt="Trash" />
-        </Button>
-    </div>
+    <MapControls {draw} {map} />
     <div class="bottom-bar">
-        <!-- TODO: Status | -- Normal -- | branch-name-example -->
+        <div class="status-item">
+            {#if status === 'saved'}
+                <span class="status-icon">✓</span>
+                <span>Saved</span>
+            {:else}
+                <span class="status-icon">●</span>
+                <span>Unsaved changes</span>
+            {/if}
+        </div>
+        <div class="status-item">
+            <span>{mode}</span>
+        </div>
+        <div class="status-item">
+            <span class="branch-icon">⎇</span>
+            <span>{currentBranch}</span>
+        </div>
     </div>
     <div class="bottom-status"></div>
 </div>
@@ -209,14 +165,12 @@
         z-index: 1000;
     }
 
-
-    .import-export-buttons {
-        position: absolute;
-        top: 10px;
-        right: 120px;
-        display: flex;
-        flex-direction: column;
+    .bottom-bar .status-item {
+        display: inline-block;
+        padding: 0 5px;
+        position: relative;
     }
+
 
     /* Adjust styles for Mapbox attribution */
     :global(.mapboxgl-ctrl-bottom-left),
@@ -240,24 +194,6 @@
         flex: 1;
         width: 100%;
         min-height: 0;
-    }
-
-    .zoom-controls {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        flex-direction: column;
-        /* gap: 5px; */
-    }
-
-    .drawing-controls {
-        position: absolute;
-        top: 120px;
-        right: 10px;
-        display: flex;
-        flex-direction: column;
-        /* gap: 5px; */
     }
 
     :global([data-theme='dark'] .mapboxgl-ctrl-icon) {
