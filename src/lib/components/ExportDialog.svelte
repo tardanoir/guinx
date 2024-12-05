@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Selected } from "@skeletonlabs/skeleton";
+    import type { Selected } from "bits-ui";
     import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "$lib/components/ui/card";
     import { Button } from "$lib/components/ui/button";
     import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "$lib/components/ui/select";
@@ -47,6 +47,16 @@
         <CardHeader>
             <CardTitle>Export Geometry</CardTitle>
             <CardDescription>Download your geometry data</CardDescription>
+            <button
+                class="absolute top-2 right-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+                on:click={() => $exportDialogOpen = false}
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                    <path d="M18 6 6 18"/>
+                    <path d="m6 6 12 12"/>
+                </svg>
+                <span class="sr-only">Close</span>
+            </button>
         </CardHeader>
         <CardContent class="space-y-4">
             <div class="space-y-2">
@@ -55,8 +65,8 @@
                         <SelectValue placeholder="Select a format" />
                     </SelectTrigger>
                     <SelectContent class="z-[10001]">
-                        <SelectItem value="geojson">GeoJSON</SelectItem>
-                        <SelectItem value="kml">KML</SelectItem>
+                        <SelectItem value=".geojson">GeoJSON</SelectItem>
+                        <SelectItem value=".kml">KML</SelectItem>
                     </SelectContent>
                 </Select>
                 <div class="flex items-center justify-between">
@@ -76,11 +86,6 @@
                 Download {selectedFormat?.value ?? ''}
             </Button>
         </CardContent>
-        <CardFooter>
-            <Button variant="outline" class="w-full" on:click={() => $exportDialogOpen = false}>
-                Cancel
-            </Button>
-        </CardFooter>
     </Card>
 </div>
 {/if}

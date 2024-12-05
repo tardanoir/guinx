@@ -3,6 +3,7 @@
 </script>
   
 <div class="layout">
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
     <Map />
 </div>
   
