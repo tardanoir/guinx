@@ -77,14 +77,25 @@
                 </div>
                 <div class="flex items-center justify-between">
                     <label for="split-geometry" class="text-sm font-medium leading-none">
-                        Split geometry
+                        Download single geometries
                     </label>
                     <Switch id="split-geometry" bind:checked={splitGeometry} />
                 </div>
             </div>
-            <Button class="w-full" on:click={downloadGeoJSON}>
-                Download {selectedFormat?.value ?? ''}
-            </Button>
+            <div class="flex flex-row gap-2">
+                <Button 
+                    variant="outline"
+                    class="w-full"
+                    on:click={() => $exportDialogOpen = false}
+                >
+                    Cancel
+                </Button>
+                <Button 
+                    class="w-full"
+                    on:click={downloadGeoJSON}
+                >
+                    Download Geometries
+                </Button>
         </CardContent>
     </Card>
 </div>

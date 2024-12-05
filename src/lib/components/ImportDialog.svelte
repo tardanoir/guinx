@@ -97,7 +97,6 @@
     <Card class="w-[350px] relative z-[10000]">
         <CardHeader>
             <CardTitle>Import Geometry</CardTitle>
-            <CardDescription>Import GeoJSON or KML files</CardDescription>
             <button
                 class="absolute top-2 right-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
                 on:click={() => $importDialogOpen = false}
@@ -135,7 +134,7 @@
 
                 <div class="space-y-2">
                     <label for="geometry-text" class="text-sm text-muted-foreground">
-                        Or paste your GeoJSON/KML here:
+                        Or paste your GeoJSON here:
                     </label>
                     <textarea
                         id="geometry-text"
@@ -143,12 +142,21 @@
                         placeholder="Paste your geometry data here..."
                         bind:value={geometryText}
                     ></textarea>
-                    <Button 
-                        class="w-full"
-                        on:click={handleTextImport}
-                    >
-                        Import Text
-                    </Button>
+                    <div class="flex flex-row gap-2">
+                        <Button 
+                            variant="outline"
+                            class="w-full"
+                            on:click={() => $importDialogOpen = false}
+                        >
+                            Cancel
+                        </Button>
+                        <Button 
+                            class="w-full"
+                            on:click={handleTextImport}
+                        >
+                            Import Geometries
+                        </Button>
+                    </div>
                 </div>
             </div>
         </CardContent>
