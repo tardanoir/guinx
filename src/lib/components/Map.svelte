@@ -2,21 +2,16 @@
     import { onMount, onDestroy } from 'svelte';
     import { browser } from '$app/environment';
     import ExportDialog from '$lib/components/ExportDialog.svelte';
-    import { exportDialogOpen, exportData } from '$lib/stores/export-dialog';
-    import { importDialogOpen } from '$lib/stores/import-dialog';
     import ImportDialog from '$lib/components/ImportDialog.svelte';
     import mapboxgl from 'mapbox-gl';
     import MapboxDraw from '@mapbox/mapbox-gl-draw';
     import MapControls from './MapControls.svelte';
+    import StatusBar from './StatusBar.svelte';
 
-    // You'll need to get a Mapbox access token
     mapboxgl.accessToken = 'pk.eyJ1IjoidGFyZGFub2lyIiwiYSI6ImNtNGJmdXFxeTAzNzMycW5kZHpyNWo3Y2kifQ.tBnUr1i-Pgcmbki6mCgRzA';
     let mapElement: HTMLElement;
     let map: mapboxgl.Map;
     let draw: any;
-    let status = 'saved';
-    let mode = 'Normal';
-    let currentBranch = 'main';
 
     onMount(async () => {
         if (browser) {
@@ -38,7 +33,6 @@
             });
 
             map.addControl(draw);
-
             map.on('draw.create', updateDrawings);
             map.on('draw.delete', updateDrawings);
             map.on('draw.update', updateDrawings);
@@ -59,41 +53,6 @@
         draw.add(geoJson);
     }
 
-    function handleExport() {
-        if (draw) {
-            $exportData = draw.getAll();
-            $exportDialogOpen = true;
-        }
-    }
-
-    function handleImport() {
-        $importDialogOpen = true;
-    }
-
-    function zoomIn() {
-        map.zoomIn();
-    }
-
-    function zoomOut() {
-        map.zoomOut();
-    }
-
-    function drawLineString() {
-        draw.changeMode('draw_line_string');
-    }
-
-    function drawPolygon() {
-        draw.changeMode('draw_polygon');
-    }
-
-    function drawPoint() {
-        draw.changeMode('draw_point');
-    }
-
-    function drawTrash() {
-        draw.deleteAll();
-    }
-
     onDestroy(() => {
         if (browser) {
             window.removeEventListener('import-geometry', handleImportGeometry as EventListener);
@@ -107,28 +66,10 @@
 <div class="map-container">
     <div bind:this={mapElement} id="map"></div>
     <MapControls {draw} {map} />
-    <div class="bottom-bar">
-        <div class="status-item">
-            {#if status === 'saved'}
-                <span class="status-icon">✓</span>
-                <span>Saved</span>
-            {:else}
-                <span class="status-icon">●</span>
-                <span>Unsaved changes</span>
-            {/if}
-        </div>
-        <div class="status-item">
-            <span>{mode}</span>
-        </div>
-        <div class="status-item">
-            <span class="branch-icon">⎇</span>
-            <span>{currentBranch}</span>
-        </div>
-    </div>
-    <div class="bottom-status"></div>
+    <StatusBar />
+    <ExportDialog />
+    <ImportDialog />
 </div>
-<ExportDialog />
-<ImportDialog />
 
 
 <style>
@@ -145,30 +86,6 @@
         flex: 1;
         width: 100%;
         min-height: 0;
-    }
-
-    .bottom-bar {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 34px;
-        background-color: black;
-        z-index: 1000;
-    }
-
-    .bottom-status {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 4px;
-        background-color: #2563EB;
-        z-index: 1000;
-    }
-
-    .bottom-bar .status-item {
-        display: inline-block;
-        padding: 0 5px;
-        position: relative;
     }
 
 

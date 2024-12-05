@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import Button from "$lib/components/ui/button/button.svelte";
     import { importDialogOpen } from '$lib/stores/import-dialog';
     import { exportDialogOpen, exportData } from '$lib/stores/export-dialog';

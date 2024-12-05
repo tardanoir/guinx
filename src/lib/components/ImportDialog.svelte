@@ -8,7 +8,7 @@
     let geometryText = '';
 
     async function handleFileSelect(event: Event) {
-        const target = event.target as HTMLInputElement;
+        const target = event.target as HTMLInputElement
         const file = target?.files?.[0];
         
         if (!file) return;
