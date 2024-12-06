@@ -1,23 +1,29 @@
-node_modules
+.env
 
-# Output
-.output
-.vercel
-.netlify
-.wrangler
-/.svelte-kit
-/build
+# Frontend
+frontend/node_modules
+frontend/.svelte-kit
+frontend/build
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Backend
+backend/tmp
+backend/.env
+backend/.env.*
+!backend/.env.example
 
 # OS
 .DS_Store
-Thumbs.db
+*.pem
 
-# Env
-.env
-.env.*
-!.env.example
-!.env.test
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
 
-# Vite
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
+# Logs
+logs
+*.log

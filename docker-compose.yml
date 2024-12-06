@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8080
+    networks:
+      - guinx-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgresql://guinx:yourpassword@db:5432/guinx
+      - JWT_SECRET=your_secret_key_here
+    networks:
+      - guinx-network
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=guinx
+      - POSTGRES_PASSWORD=yourpassword
+      - POSTGRES_DB=guinx
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - guinx-network
+    restart: unless-stopped
+
+networks:
+  guinx-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -73,28 +73,12 @@
 
 
 <style>
-    .map-container {
-        position: relative;
-        height: 100vh;
-        width: 100vw;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
-  
-    #map {
-        flex: 1;
-        width: 100%;
-        min-height: 0;
-    }
-
-
     /* Adjust styles for Mapbox attribution */
     :global(.mapboxgl-ctrl-bottom-left),
     :global(.mapboxgl-ctrl-bottom-right) {
         position: absolute;
-        bottom: 38px;
-        z-index: 1001;
+        bottom: 40px;
+        z-index: 1010;
     }
 
     /* Ensure the map container fills the viewport */
